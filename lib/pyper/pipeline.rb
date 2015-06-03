@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash' # indifferent access
+
 require_relative 'write_pipes/cassandra_writer'
 require_relative 'write_pipes/attribute_serializer'
 require_relative 'write_pipes/content_storage'
@@ -16,6 +18,7 @@ require_relative 'read_pipes/force_enumerator'
 require_relative 'pipes/mod_key'
 require_relative 'pipes/field_rename'
 require_relative 'pipes/default_values'
+require_relative 'pipes/translate_reversed_time_field'
 
 module Pyper
 

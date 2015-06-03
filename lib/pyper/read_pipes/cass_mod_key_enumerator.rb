@@ -24,7 +24,7 @@ module Pyper::ReadPipes
            result = client.select(table).where(arguments.merge(:mod_key => mod_id)).execute
            result.each { |item| yielder << item }
          end
-       end).lazy
+       end).lazy.map { |item| item.with_indifferent_access }
     end
   end
 end
