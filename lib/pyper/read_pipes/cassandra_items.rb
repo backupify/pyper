@@ -27,7 +27,7 @@ module Pyper::ReadPipes
       status[:paging_state] = result.paging_state
       status[:last_page] = result.last_page?
 
-      result.rows.lazy
+      result.rows.lazy.map { |item| item.with_indifferent_access }
     end
   end
 end
