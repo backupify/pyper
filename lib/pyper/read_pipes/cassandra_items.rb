@@ -15,7 +15,7 @@ module Pyper::ReadPipes
       page_size = arguments.delete(:page_size)
       paging_state = arguments.delete(:paging_state)
       order = arguments.delete(:order)
-      filtering = arugments.delete(:allow_filtering)
+      filtering = arguments.delete(:allow_filtering)
 
       opts = (options || {}).merge({ page_size: page_size, paging_state: paging_state})
 
