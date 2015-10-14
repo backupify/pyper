@@ -9,7 +9,9 @@ module Pyper::WritePipes
 
       result = client.insert(table_name, attributes_to_write, { :if_not_exists => true })
       if results.first["[applied]"] == false
-        status[]
+        old_record = results.first
+        old_record.delete("[applied]")
+        status["old_record"] = old_record
       end
       attributes
     end
