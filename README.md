@@ -12,7 +12,7 @@ Require the pyper library and the pipes that you need:
 
 ```ruby
 require 'pyper'
-require 'pyper/model'  # Import model-related pipes
+require 'pyper/model'      # Import model-related pipes
 require 'pyper/cassandra'  # Import Cassandra-related pipes
 require 'pyper/content'    # Import content storage-related pipes
 ```
