@@ -23,12 +23,12 @@ Create a pipeline composed of a set of pipes:
 
 ```ruby
 write_pipeline = Pyper::Pipeline.create do
-   add Pyper::Pipes::Write::AttributeSerializer.new
-   add Pyper::Pipes::FieldRename.new(:to => :to_emails, :from => :from_email)
-   add Pyper::Pipes::ModKey.new
-   add Pyper::Pipes::Cassandra::Writer.new(:table_1, metadata_client)
-   add Pyper::Pipes::Cassandra::Writer.new(:table_2, indexes_client)
-   add Pyper::Pipes::Cassandra::Writer.new(:table_3, indexes_client)
+  add Pyper::Pipes::Write::AttributeSerializer.new
+  add Pyper::Pipes::FieldRename.new(:to => :to_emails, :from => :from_email)
+  add Pyper::Pipes::ModKey.new
+  add Pyper::Pipes::Cassandra::Writer.new(:table_1, metadata_client)
+  add Pyper::Pipes::Cassandra::Writer.new(:table_2, indexes_client)
+  add Pyper::Pipes::Cassandra::Writer.new(:table_3, indexes_client)
 end
 ```
 
@@ -57,12 +57,12 @@ deserialization or data mapping operations.
 
 ```ruby
 read_pipeline = Pyper::Pipeline.create do
-   add Pyper::Pipes::Cassandra::PaginationDecoding.new
-   add Pyper::Pipes::Cassandra::Reader.new(:table, indexes_client)
-   add Pyper::Pipes::FieldRename.new(:to_emails => :to, :from_email => :from)
-   add Pyper::Pipes::Cassandra::PaginationEncoding.new
-   add Pyper::Pipes::Model::VirtusDeserializer.new(message_attributes)
-   add Pyper::Pipes::Model::VirtusParser.new(MyModelClass)
+  add Pyper::Pipes::Cassandra::PaginationDecoding.new
+  add Pyper::Pipes::Cassandra::Reader.new(:table, indexes_client)
+  add Pyper::Pipes::FieldRename.new(:to_emails => :to, :from_email => :from)
+  add Pyper::Pipes::Cassandra::PaginationEncoding.new
+  add Pyper::Pipes::Model::VirtusDeserializer.new(message_attributes)
+  add Pyper::Pipes::Model::VirtusParser.new(MyModelClass)
 end
 
 result = read_pipeline.push(:row => '1', :id => 'i', :page_token => 'sdf')
@@ -80,18 +80,18 @@ A pipeline is an instance of `Pyper::Pipeline`, to which pipes are appended usin
 
 ```ruby
 my_pipeline = Pyper::Pipeline.new <<
-   Pyper::Pipes::Cassandra::PaginationDecoding.new <<
-   Pyper::Pipes::Cassandra::Reader.new(:table, indexes_client) <<
-   Pyper::Pipes::Cassandra::PaginationEncoding.new
+  Pyper::Pipes::Cassandra::PaginationDecoding.new <<
+  Pyper::Pipes::Cassandra::Reader.new(:table, indexes_client) <<
+  Pyper::Pipes::Cassandra::PaginationEncoding.new
 ```
 
 However, the `create` method makes pipeline construction easier. The above example becomes the following:
 
 ```ruby
 my_pipeline = Pyper::Pipeline.create do
-   add Pyper::Pipes::Cassandra::PaginationDecoding.new
-   add Pyper::Pipes::Cassandra::Reader.new(:table, indexes_client)
-   add Pyper::Pipes::Cassandra::PaginationEncoding.new
+  add Pyper::Pipes::Cassandra::PaginationDecoding.new
+  add Pyper::Pipes::Cassandra::Reader.new(:table, indexes_client)
+  add Pyper::Pipes::Cassandra::PaginationEncoding.new
 end
 ```
 
@@ -132,12 +132,24 @@ something like:
 ```ruby
 class Deserialize
   def call(items, status = {})
-     items.map { |item| deserialize(item) }
+    items.map { |item| deserialize(item) }
   end
 
   def deserialize(item)
-    ...
+    # ...
   end
+end
+```
+
+### Debugging Pipelines
+
+Because pipes are expected to respond to `#call` you can simply add Procs and Lambdas in your code to debug pipelines:
+
+```rb
+pl = Pyper::Pipeline.create do
+  add Pyper::Pipes::Model::AttributeSerializer.new
+  add -> (*args) { binding.pry }
+  add Pyper::Pipes::Cassandra::Writer.new(:my_table, client, fields)
 end
 ```
 
