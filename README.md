@@ -141,6 +141,18 @@ class Deserialize
 end
 ```
 
+### Debugging Pipelines
+
+Because pipes are expected to respond to `#call` you can simply add Procs and Lambdas in your code to debug pipelines:
+
+```rb
+pl = Pyper::Pipeline.create do
+  add Pyper::Pipes::Model::AttributeSerializer.new
+  add -> (*args) { binding.pry }
+  add Pyper::Pipes::Cassandra::Writer.new(:my_table, client, fields)
+end
+```
+
 ## Installation
 
 Add this line to your application's Gemfile:
