@@ -2,6 +2,7 @@ require 'rubygems'
 require 'pry'
 require 'minitest/autorun'
 require 'minitest/should'
+require 'mocha/api'
 
 class Minitest::Should::TestCase
   def self.xshould(*args)

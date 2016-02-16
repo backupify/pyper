@@ -62,6 +62,17 @@ module Pyper::Pipes::Cassandra
         assert_equal false, status[:last_page]
       end
 
+      should "allow custom consistency to be passed for a single request" do
+        original_opts = @pipe.client.session.instance_variable_get(:@options)
+        refute_equal original_opts.consistency, :all
+
+        expected_opts_with_all = original_opts.override(:consistency => :all, :arguments => ["id"])
+        original_opts.expects(:override).with { |opts| opts[:consistency] == :all }.returns(expected_opts_with_all)
+
+        out = @pipe.pipe({id: 'id', :consistency => :all}, {})
+        assert_equal 2, out.count
+      end
+
       context "columns selecting" do
         should "only select given columns from columns argument" do
           out = @pipe.pipe({id: 'id', :columns => [:a]}).to_a
