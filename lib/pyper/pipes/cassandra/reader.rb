@@ -9,6 +9,8 @@ module Pyper::Pipes::Cassandra
     # @option arguments [Array] :order A pair [clustering_column, :desc|:asc] determining how to order the results.
     # @option arguments [Object] :paging_state
     # @option arguments [Integer] :page_size
+    # @option arguments [Symbol] :consistency The consistency for the request. Must be
+    #   one of Cassandra::CONSISTENCIES.
     # @param status [Hash] The mutable status field
     # @return [Enumerator::Lazy<Hash>] enumerator of items
     def pipe(arguments, status = {})
@@ -17,8 +19,12 @@ module Pyper::Pipes::Cassandra
       paging_state = arguments.delete(:paging_state)
       order = arguments.delete(:order)
       columns = arguments.delete(:columns)
+      consistency = arguments.delete(:consistency)
 
-      opts = (options || {}).merge({ page_size: page_size, paging_state: paging_state})
+      opts = options.nil? ? {} : options.dup
+      opts[:page_size] = page_size if page_size
+      opts[:paging_state] = paging_state if paging_state
+      opts[:consistency] = consistency if consistency
 
       query = client.select(table, columns).where(arguments)
       query = query.limit(limit) if limit
