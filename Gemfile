@@ -21,4 +21,4 @@ group :test do
 end
 
 gem 'storage_strategy', :git => 'git@github.com:backupify/storage_strategy.git'
-gem 'cassava', :git => 'git@github.com:backupify/cassava.git'
+gem 'cassava_rb'
