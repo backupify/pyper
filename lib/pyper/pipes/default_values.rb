@@ -6,10 +6,17 @@ module Pyper::Pipes
     # @param status [Hash] The mutable status field
     # @return [Hash] The item attributes with default values inserted
     def pipe(attrs, status = {})
-      default_values.each do |field, value|
-        attrs[field] = value unless attrs[field]
+      case attrs
+      when Hash then set_value(attrs)
+      else attrs.map { |item| set_value(item) }
       end
-      attrs
+    end
+
+    def set_value(item)
+      default_values.each do |field, value|
+        item[field] = value
+      end
+      item
     end
   end
 end
