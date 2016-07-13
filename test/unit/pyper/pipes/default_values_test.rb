@@ -8,8 +8,12 @@ module Pyper::Pipes
         @pipe = DefaultValues.new(:a => 1, :c => 2)
       end
 
-      should 'rename provided symbols as symbols' do
-        assert_equal({ :a => 1, :c => 2 }, @pipe.pipe(:a => 2, :c => nil))
+      should 'set default values properly' do
+        assert_equal({ :a => 1, :b => 3, :c => 2 }, @pipe.pipe(:a => 2, :b => 3, :c => nil))
+      end
+
+      should 'work if the passed in values are a in a lazy enumerator' do
+        assert_equal({ :a => 1, :b => 3, :c => 2 }, @pipe.pipe({ :a => 2, :b => 3, :c => nil}.lazy))
       end
     end
   end

@@ -8,7 +8,8 @@ module Pyper::Pipes
     def pipe(attrs, status = {})
       case attrs
       when Hash then set_value(attrs)
-      else attrs.map { |item| set_value(item) }
+      when Enumerator::Lazy then set_value(attrs.to_h)
+      else attrs
       end
     end
 
