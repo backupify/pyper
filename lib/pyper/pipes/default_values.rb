@@ -17,7 +17,7 @@ module Pyper::Pipes
     def set_value(item)
       new_item = item.dup
       default_values.each do |field, value|
-        new_item[field] = value
+        new_item[field] = value unless new_item[field]
       end
       new_item
     end
