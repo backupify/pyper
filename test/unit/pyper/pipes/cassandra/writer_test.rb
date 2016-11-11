@@ -46,6 +46,18 @@ module Pyper::Pipes::Cassandra
         writer = Writer.new(:test, @client, filter)
         assert_equal attributes, writer.pipe(attributes)
       end
+
+      should 'allow a TTL to be passed into the pipe' do
+        attributes = {id: 'id', a: 'a', b: 'b', ttl: 12345}
+        filter = [:id, :a, :b, :ttl]
+        ttl = attributes[:ttl]
+        expected_attributes = attributes.dup
+        expected_attributes.delete(:ttl)
+
+        writer = Writer.new(:test, @client, filter)
+        writer.client.expects(:insert).with(:test, expected_attributes, ttl)
+        assert_equal attributes, writer.pipe(attributes)
+      end
     end
   end
 end
