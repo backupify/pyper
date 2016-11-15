@@ -17,7 +17,8 @@ module Pyper::Pipes::Cassandra
                               attributes
                             end
 
-      client.insert(table_name, attributes_to_write)
+      ttl = attributes_to_write.delete(:ttl)
+      client.insert(table_name, attributes_to_write, ttl)
       attributes
     end
   end
