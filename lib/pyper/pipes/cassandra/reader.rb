@@ -21,12 +21,17 @@ module Pyper::Pipes::Cassandra
       columns = arguments.delete(:columns)
       consistency = arguments.delete(:consistency)
 
+      # arguments to be searched by < and >
+      comparators = arguments.delete(:comparators)
+
       opts = options.nil? ? {} : options.dup
       opts[:page_size] = page_size if page_size
       opts[:paging_state] = paging_state if paging_state
       opts[:consistency] = consistency if consistency
 
       query = client.select(table, columns).where(arguments)
+      query = query.where(comparators)
+
       query = query.limit(limit) if limit
       query = query.order(order.first, order.last) if order
 
