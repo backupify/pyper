@@ -35,6 +35,11 @@ module Pyper::Pipes::Cassandra
         assert_equal 1, out.count
       end
 
+      should 'support where clauses' do
+        out = @pipe.pipe(where: [['id = ?', 'id'], ['a = ?', '1']]).to_a
+        assert_equal 1, out.count
+      end
+
       should 'order results by field and direction if order pair provided' do
         out = @pipe.pipe(id: 'id', :order => [:a, :desc]).to_a
         assert_equal %w(2 1), out.map { |i| i['a'] }
