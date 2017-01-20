@@ -21,7 +21,6 @@ module Pyper::Pipes::Cassandra
       columns = arguments.delete(:columns)
       consistency = arguments.delete(:consistency)
       where = arguments.delete(:where)
-      allow_filtering = arguments.delete(:allow_filtering)
 
       opts = options.nil? ? {} : options.dup
       opts[:page_size] = page_size if page_size
@@ -34,7 +33,6 @@ module Pyper::Pipes::Cassandra
 
       query = query.limit(limit) if limit
       query = query.order(order.first, order.last) if order
-      query = query.allow_filtering if allow_filtering
       result = query.execute(opts)
 
       status[:paging_state] = result.paging_state
