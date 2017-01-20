@@ -20,16 +20,19 @@ module Pyper::Pipes::Cassandra
       order = arguments.delete(:order)
       columns = arguments.delete(:columns)
       consistency = arguments.delete(:consistency)
+      where = arguments.delete(:where)
 
       opts = options.nil? ? {} : options.dup
       opts[:page_size] = page_size if page_size
       opts[:paging_state] = paging_state if paging_state
       opts[:consistency] = consistency if consistency
 
-      query = client.select(table, columns).where(arguments)
+      query = client.select(table, columns)
+      query = query.where(arguments) if arguments.any? # backwards-compatibility -- it should be preferred to pass in `:where`
+      where.each { |clause| query = query.where(*clause) } if where.present?
+
       query = query.limit(limit) if limit
       query = query.order(order.first, order.last) if order
-
       result = query.execute(opts)
 
       status[:paging_state] = result.paging_state
