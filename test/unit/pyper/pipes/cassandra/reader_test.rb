@@ -36,8 +36,9 @@ module Pyper::Pipes::Cassandra
       end
 
       should 'support where clauses' do
-        out = @pipe.pipe(where: [['id = ?', 'id'], ['a = ?', '1']]).to_a
+        out = @pipe.pipe(where: [['id = ?', 'id'], ['a > ?', '1']]).to_a
         assert_equal 1, out.count
+        assert_equal '2', out.first['a']
       end
 
       should 'order results by field and direction if order pair provided' do
